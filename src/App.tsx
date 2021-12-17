@@ -1,9 +1,11 @@
 import React from 'react';
 import './styles.scss';
+import {Card} from 'antd';
+import PetCard from "./components/PetCard";
 const App: React.FC = () => {
     return (
         <div className="wrapper">
-            <h1>React 17 and TypeScript 4 App!🚀</h1>
+            <PetCard />
         </div>
     );
 };

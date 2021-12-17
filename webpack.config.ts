@@ -1,7 +1,7 @@
 import path from 'path';
 import {Configuration,DefinePlugin} from "webpack";
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+//import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import {TsconfigPathsPlugin} from "tsconfig-paths-webpack-plugin";
 
 const webpackConfig = (): Configuration => ({
@@ -10,7 +10,7 @@ const webpackConfig = (): Configuration => ({
     ? {}
         :{devtool: "eval-source-map"}),
     resolve: {
-       extensions: [".ts",".tsx",".js"],
+       extensions: [".ts",".tsx",".js",".jsx"],
         plugins: [new TsconfigPathsPlugin({configFile: "./tsconfig.json"})],
 
     },
@@ -20,6 +20,21 @@ const webpackConfig = (): Configuration => ({
     },
     module: {
        rules: [
+         {
+           test: /\.j(sx|s)$/,
+           exclude: /node_modules/,
+           use: [
+             {
+               loader: "cache-loader"
+             },
+             {
+               loader: "babel-loader",
+               options: {
+                 cacheDirectory: true
+               }
+             }
+           ]
+         },
            {
                test:/\.tsx?$/,
                loader: "ts-loader",
@@ -48,12 +63,12 @@ const webpackConfig = (): Configuration => ({
         new DefinePlugin({
             "process.env": process.env.production || process.env.development
         }),
-        new ForkTsCheckerWebpackPlugin({
-            // Speeds up TypeScript type checking and ESLint linting (by moving each to a separate process)
-            eslint: {
-                files: "./src/**/*.{ts,tsx,js,jsx}"
-            },
-        }),
+        // new ForkTsCheckerWebpackPlugin({
+        //     // Speeds up TypeScript type checking and ESLint linting (by moving each to a separate process)
+        //     eslint: {
+        //         files: "./src/**/*.{ts,tsx,js,jsx}"
+        //     },
+        // }),
     ],
 });
 
